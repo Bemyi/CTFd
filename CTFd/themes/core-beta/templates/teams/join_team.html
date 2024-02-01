@@ -11,7 +11,7 @@
       <div class="col-md-8 col-lg-6 offset-md-2 offset-lg-3">
         {% include "components/errors.html" %}
 
-        {% with form = Forms.teams.TeamJoinForm() %}
+        {% with form = Forms.teams.TeamJoinForm(name=team_name) %}
           <form method="POST">
             <div class="mb-3">
               {{ form.name.label(class="form-label") }}
@@ -20,7 +20,7 @@
 
             <div class="mb-3">
               {{ form.password.label(class="form-label") }}
-              {{ form.password(class="form-control") }}
+              {{ form.password(class="form-control", value=form.name.data or team_name) }}
             </div>
 
             <div class="row pt-3">

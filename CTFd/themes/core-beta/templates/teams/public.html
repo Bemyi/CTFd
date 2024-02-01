@@ -3,7 +3,13 @@
 {% block content %}
   <div class="jumbotron">
     <div class="container">
-      <h1 id="team-id" data-ctfd-team-id="{{ team.id }}">{{ team.name }}</h1>
+      <h1 id="team-id" data-ctfd-team-id="{{ team.id }}">{{ team.name }}
+        <a class="no-decoration" href="{{ url_for('teams.join', team_name=team.name) }}">
+          <span role="button" data-toggle="tooltip" title="Join Team">
+            <i class="btn-fa fas fa-plus-circle"></i>
+          </span>
+        </a>
+      </h1>
 
       {% if team.oauth_id %}
         <a href="https://majorleaguecyber.org/t/{{ team.name }}">
