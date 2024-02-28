@@ -4,11 +4,13 @@
   <div class="jumbotron">
     <div class="container">
       <h1 id="team-id" data-ctfd-team-id="{{ team.id }}">{{ team.name }}
-        <a class="no-decoration" href="{{ url_for('teams.join', team_name=team.name) }}">
-          <span role="button" data-toggle="tooltip" title="Join Team">
-            <i class="btn-fa fas fa-plus-circle"></i>
-          </span>
-        </a>
+        {% if not user.team_id %}
+          <a class="no-decoration" href="{{ url_for('teams.join', team_name=team.name) }}">
+            <span role="button" data-toggle="tooltip" title="Join Team">
+              <button class="btn btn-primary float-right">Join</button>
+            </span>
+          </a>
+        {% endif %}
       </h1>
 
       {% if team.oauth_id %}

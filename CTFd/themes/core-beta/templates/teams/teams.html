@@ -50,6 +50,9 @@
             <td><b>{% trans %}Website{% endtrans %}</b></td>
             <td class="d-none d-md-table-cell"><b>{% trans %}Affiliation{% endtrans %}</b></td>
             <td class="d-none d-md-table-cell"><b>{% trans %}Country{% endtrans %}</b></td>
+            {% if not user.team_id %}
+              <td><b>{% trans %}Actions{% endtrans %}</b></td>
+            {% endif %}
           </tr>
           </thead>
           <tbody>
@@ -109,6 +112,15 @@
                 {% endif %}
 							</span>
               </td>
+              {% if not user.team_id %}
+                <td class="d-none d-md-table-cell">
+                  <a class="no-decoration" href="{{ url_for('teams.join', team_name=team.name) }}">
+                    <span role="button" data-toggle="tooltip" title="Join Team">
+                      <button class="btn btn-primary float-right">Join</button>
+                    </span>
+                  </a>
+                </td>
+              {% endif %}
             </tr>
           {% endfor %}
 

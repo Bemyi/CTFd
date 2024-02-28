@@ -43,6 +43,8 @@ def listing():
     args = dict(request.args)
     args.pop("page", 1)
 
+    user = get_current_user_attrs()
+
     return render_template(
         "teams/teams.html",
         teams=teams,
@@ -50,6 +52,7 @@ def listing():
         next_page=url_for(request.endpoint, page=teams.next_num, **args),
         q=q,
         field=field,
+        user=user
     )
 
 
@@ -370,6 +373,8 @@ def public(team_id):
     place = team.place
     score = team.score
 
+    user = get_current_user_attrs()
+
     if errors:
         return render_template("teams/public.html", team=team, errors=errors)
 
@@ -386,4 +391,5 @@ def public(team_id):
         score_frozen=config.is_scoreboard_frozen(),
         infos=infos,
         errors=errors,
+        user=user
     )
