@@ -33,9 +33,9 @@ from CTFd.utils.config.visibility import (
 )
 from CTFd.utils.dates import ctf_ended, ctf_paused, ctftime
 from CTFd.utils.decorators import (
-    admins_only,
     during_ctf_time_only,
     require_verified_emails,
+    admin_or_author,
 )
 from CTFd.utils.decorators.visibility import (
     check_challenge_visibility,
@@ -50,6 +50,7 @@ from CTFd.utils.user import (
     get_current_user,
     get_current_user_attrs,
     is_admin,
+    is_author,
 )
 
 challenges_namespace = Namespace(
@@ -220,7 +221,7 @@ class ChallengeList(Resource):
         db.session.close()
         return {"success": True, "data": response}
 
-    @admins_only
+    @admin_or_author
     @challenges_namespace.doc(
         description="Endpoint to create a Challenge object",
         responses={
@@ -252,7 +253,7 @@ class ChallengeList(Resource):
 
 @challenges_namespace.route("/types")
 class ChallengeTypes(Resource):
-    @admins_only
+    @admin_or_author
     def get(self):
         response = {}
 
@@ -286,7 +287,7 @@ class Challenge(Resource):
         },
     )
     def get(self, challenge_id):
-        if is_admin():
+        if is_admin() or is_author():
             chal = Challenges.query.filter(Challenges.id == challenge_id).first_or_404()
         else:
             chal = Challenges.query.filter(
@@ -323,7 +324,7 @@ class Challenge(Resource):
                     solve_ids = []
                 solve_ids = {value for value, in solve_ids}
                 prereqs = set(requirements).intersection(all_challenge_ids)
-                if solve_ids >= prereqs or is_admin():
+                if solve_ids >= prereqs or is_admin() or is_author():
                     pass
                 else:
                     if anonymize:
@@ -357,7 +358,7 @@ class Challenge(Resource):
             team = get_current_team()
 
             # TODO: Convert this into a re-useable decorator
-            if is_admin():
+            if is_admin() or is_author():
                 pass
             else:
                 if config.is_teams_mode() and team is None:
@@ -441,7 +442,7 @@ class Challenge(Resource):
         db.session.close()
         return {"success": True, "data": response}
 
-    @admins_only
+    @admin_or_author
     @challenges_namespace.doc(
         description="Endpoint to edit a specific Challenge object",
         responses={
@@ -471,7 +472,7 @@ class Challenge(Resource):
 
         return {"success": True, "data": response}
 
-    @admins_only
+    @admin_or_author
     @challenges_namespace.doc(
         description="Endpoint to delete a specific Challenge object",
         responses={200: ("Success", "APISimpleSuccessResponse")},
@@ -503,7 +504,7 @@ class ChallengeAttempt(Resource):
 
         challenge_id = request_data.get("challenge_id")
 
-        if current_user.is_admin():
+        if current_user.is_admin() or current_user.is_author():
             preview = request.args.get("preview", False)
             if preview:
                 challenge = Challenges.query.filter_by(id=challenge_id).first_or_404()
@@ -620,7 +621,7 @@ class ChallengeAttempt(Resource):
 
             status, message = chal_class.attempt(challenge, request)
             if status:  # The challenge plugin says the input is right
-                if ctftime() or current_user.is_admin():
+                if ctftime() or current_user.is_admin() or current_user.is_author():
                     chal_class.solve(
                         user=user, team=team, challenge=challenge, request=request
                     )
@@ -640,7 +641,7 @@ class ChallengeAttempt(Resource):
                     "data": {"status": "correct", "message": message},
                 }
             else:  # The challenge plugin says the input is wrong
-                if ctftime() or current_user.is_admin():
+                if ctftime() or current_user.is_admin() or current_user.is_author():
                     chal_class.fail(
                         user=user, team=team, challenge=challenge, request=request
                     )
@@ -729,7 +730,7 @@ class ChallengeSolves(Resource):
 
 @challenges_namespace.route("/<challenge_id>/files")
 class ChallengeFiles(Resource):
-    @admins_only
+    @admin_or_author
     def get(self, challenge_id):
         response = []
 
@@ -744,7 +745,7 @@ class ChallengeFiles(Resource):
 
 @challenges_namespace.route("/<challenge_id>/tags")
 class ChallengeTags(Resource):
-    @admins_only
+    @admin_or_author
     def get(self, challenge_id):
         response = []
 
@@ -759,7 +760,7 @@ class ChallengeTags(Resource):
 
 @challenges_namespace.route("/<challenge_id>/topics")
 class ChallengeTopics(Resource):
-    @admins_only
+    @admin_or_author
     def get(self, challenge_id):
         response = []
 
@@ -779,7 +780,7 @@ class ChallengeTopics(Resource):
 
 @challenges_namespace.route("/<challenge_id>/hints")
 class ChallengeHints(Resource):
-    @admins_only
+    @admin_or_author
     def get(self, challenge_id):
         hints = Hints.query.filter_by(challenge_id=challenge_id).all()
         schema = HintSchema(many=True)
@@ -793,7 +794,7 @@ class ChallengeHints(Resource):
 
 @challenges_namespace.route("/<challenge_id>/flags")
 class ChallengeFlags(Resource):
-    @admins_only
+    @admin_or_author
     def get(self, challenge_id):
         flags = Flags.query.filter_by(challenge_id=challenge_id).all()
         schema = FlagSchema(many=True)
@@ -807,7 +808,7 @@ class ChallengeFlags(Resource):
 
 @challenges_namespace.route("/<challenge_id>/requirements")
 class ChallengeRequirements(Resource):
-    @admins_only
+    @admin_or_author
     def get(self, challenge_id):
         challenge = Challenges.query.filter_by(id=challenge_id).first_or_404()
         return {"success": True, "data": challenge.requirements}

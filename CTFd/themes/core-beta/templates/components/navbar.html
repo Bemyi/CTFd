@@ -64,7 +64,7 @@
       <ul class="navbar-nav ms-md-auto d-block d-sm-flex d-md-flex">
         {% if authed() %}
 
-          {% if is_admin() %}
+          {% if is_admin() or is_author() %}
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('admin.view') }}">
                 <span
@@ -77,7 +77,11 @@
                 </span>
                 <span class="d-sm-block d-md-none d-lg-block">
                   <i class="fas fa-wrench pe-1"></i>
-                  {% trans %}Admin Panel{% endtrans %}
+                  {% if is_admin()%}
+                    {% trans %}Admin Panel{% endtrans %}
+                  {% else %}
+                    {% trans %}Author Panel{% endtrans %}
+                  {% endif %}
                 </span>
               </a>
             </li>

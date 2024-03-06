@@ -4,13 +4,13 @@ from CTFd.admin import admin
 from CTFd.models import Challenges, Flags, Solves
 from CTFd.plugins.challenges import CHALLENGE_CLASSES, get_chal_class
 from CTFd.schemas.tags import TagSchema
-from CTFd.utils.decorators import admins_only
+from CTFd.utils.decorators import admin_or_author
 from CTFd.utils.security.signing import serialize
 from CTFd.utils.user import get_current_team, get_current_user
 
 
 @admin.route("/admin/challenges")
-@admins_only
+@admin_or_author
 def challenges_listing():
     q = request.args.get("q")
     field = request.args.get("field")
@@ -35,7 +35,7 @@ def challenges_listing():
 
 
 @admin.route("/admin/challenges/<int:challenge_id>")
-@admins_only
+@admin_or_author
 def challenges_detail(challenge_id):
     challenges = dict(
         Challenges.query.with_entities(Challenges.id, Challenges.name).all()
@@ -75,7 +75,7 @@ def challenges_detail(challenge_id):
 
 
 @admin.route("/admin/challenges/preview/<int:challenge_id>")
-@admins_only
+@admin_or_author
 def challenges_preview(challenge_id):
     challenge = Challenges.query.filter_by(id=challenge_id).first_or_404()
     chal_class = get_chal_class(challenge.type)
@@ -112,7 +112,7 @@ def challenges_preview(challenge_id):
 
 
 @admin.route("/admin/challenges/new")
-@admins_only
+@admin_or_author
 def challenges_new():
     types = CHALLENGE_CLASSES.keys()
     return render_template("admin/challenges/new.html", types=types)

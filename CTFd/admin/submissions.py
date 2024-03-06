@@ -2,14 +2,14 @@ from flask import render_template, request, url_for
 
 from CTFd.admin import admin
 from CTFd.models import Challenges, Submissions
-from CTFd.utils.decorators import admins_only
+from CTFd.utils.decorators import admin_or_author
 from CTFd.utils.helpers.models import build_model_filters
 from CTFd.utils.modes import get_model
 
 
 @admin.route("/admin/submissions", defaults={"submission_type": None})
 @admin.route("/admin/submissions/<submission_type>")
-@admins_only
+@admin_or_author
 def submissions_listing(submission_type):
     filters_by = {}
     if submission_type:

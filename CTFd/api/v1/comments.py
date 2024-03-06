@@ -16,7 +16,7 @@ from CTFd.models import (
     db,
 )
 from CTFd.schemas.comments import CommentSchema
-from CTFd.utils.decorators import admins_only
+from CTFd.utils.decorators import admin_or_author
 from CTFd.utils.helpers.models import build_model_filters
 
 comments_namespace = Namespace("comments", description="Endpoint to retrieve Comments")
@@ -59,7 +59,7 @@ def get_comment_model(data):
 
 @comments_namespace.route("")
 class CommentList(Resource):
-    @admins_only
+    @admin_or_author
     @comments_namespace.doc(
         description="Endpoint to list Comment objects in bulk",
         responses={
@@ -114,7 +114,7 @@ class CommentList(Resource):
             "data": response.data,
         }
 
-    @admins_only
+    @admin_or_author
     @comments_namespace.doc(
         description="Endpoint to create a Comment object",
         responses={
@@ -145,7 +145,7 @@ class CommentList(Resource):
 
 @comments_namespace.route("/<comment_id>")
 class Comment(Resource):
-    @admins_only
+    @admin_or_author
     @comments_namespace.doc(
         description="Endpoint to delete a specific Comment object",
         responses={200: ("Success", "APISimpleSuccessResponse")},

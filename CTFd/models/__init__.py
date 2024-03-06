@@ -552,6 +552,9 @@ class Admins(Users):
     __tablename__ = "admins"
     __mapper_args__ = {"polymorphic_identity": "admin"}
 
+class Authors(Users):
+    __tablename__ = "authors"
+    __mapper_args__ = {"polymorphic_identity": "author"}
 
 class Teams(db.Model):
     __tablename__ = "teams"

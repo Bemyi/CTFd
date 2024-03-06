@@ -7,7 +7,7 @@ from CTFd.utils import config, get_config
 from CTFd.utils import user as current_user
 from CTFd.utils.config import is_teams_mode
 from CTFd.utils.dates import ctf_ended, ctf_started, ctftime, view_after_ctf
-from CTFd.utils.user import authed, get_current_team, get_current_user, is_admin
+from CTFd.utils.user import authed, get_current_team, get_current_user, is_admin, is_author
 
 
 def during_ctf_time_only(f):
@@ -141,6 +141,25 @@ def admins_only(f):
                 return redirect(url_for("auth.login", next=request.full_path))
 
     return admins_only_wrapper
+
+def admin_or_author(f):
+    """
+    Decorator that requires the user to be authenticated and either an admin or an author
+    :param f:
+    :return:
+    """
+
+    @functools.wraps(f)
+    def admin_or_author_wrapper(*args, **kwargs):
+        if is_admin() or is_author():
+            return f(*args, **kwargs)
+        else:
+            if request.content_type == "application/json":
+                abort(403)
+            else:
+                return redirect(url_for("auth.login", next=request.full_path))
+
+    return admin_or_author_wrapper
 
 
 def require_team(f):

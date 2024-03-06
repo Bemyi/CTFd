@@ -10,7 +10,7 @@ from CTFd.constants import RawEnum
 from CTFd.models import Files, db
 from CTFd.schemas.files import FileSchema
 from CTFd.utils import uploads
-from CTFd.utils.decorators import admins_only
+from CTFd.utils.decorators import admin_or_author
 from CTFd.utils.helpers.models import build_model_filters
 
 files_namespace = Namespace("files", description="Endpoint to retrieve Files")
@@ -37,7 +37,7 @@ files_namespace.schema_model(
 
 @files_namespace.route("")
 class FilesList(Resource):
-    @admins_only
+    @admin_or_author
     @files_namespace.doc(
         description="Endpoint to get file objects in bulk",
         responses={
@@ -74,7 +74,7 @@ class FilesList(Resource):
 
         return {"success": True, "data": response.data}
 
-    @admins_only
+    @admin_or_author
     @files_namespace.doc(
         description="Endpoint to get file objects in bulk",
         responses={
@@ -122,7 +122,7 @@ class FilesList(Resource):
 
 @files_namespace.route("/<file_id>")
 class FilesDetail(Resource):
-    @admins_only
+    @admin_or_author
     @files_namespace.doc(
         description="Endpoint to get a specific file object",
         responses={
@@ -143,7 +143,7 @@ class FilesDetail(Resource):
 
         return {"success": True, "data": response.data}
 
-    @admins_only
+    @admin_or_author
     @files_namespace.doc(
         description="Endpoint to delete a file object",
         responses={200: ("Success", "APISimpleSuccessResponse")},

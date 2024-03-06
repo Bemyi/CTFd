@@ -40,6 +40,7 @@ from CTFd.utils.user import (
     get_current_user_recent_ips,
     get_ip,
     is_admin,
+    is_author,
 )
 
 
@@ -106,6 +107,7 @@ def init_template_globals(app):
     app.jinja_env.globals.update(integrations=integrations)
     app.jinja_env.globals.update(authed=authed)
     app.jinja_env.globals.update(is_admin=is_admin)
+    app.jinja_env.globals.update(is_author=is_author)
     app.jinja_env.globals.update(get_current_user_attrs=get_current_user_attrs)
     app.jinja_env.globals.update(get_current_team_attrs=get_current_team_attrs)
     app.jinja_env.globals.update(get_ip=get_ip)

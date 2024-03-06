@@ -13,7 +13,7 @@ from CTFd.cache import clear_challenges, clear_standings
 from CTFd.constants import RawEnum
 from CTFd.models import Solves, Submissions, db
 from CTFd.schemas.submissions import SubmissionSchema
-from CTFd.utils.decorators import admins_only
+from CTFd.utils.decorators import admin_or_author
 from CTFd.utils.helpers.models import build_model_filters
 
 submissions_namespace = Namespace(
@@ -43,7 +43,7 @@ submissions_namespace.schema_model(
 
 @submissions_namespace.route("")
 class SubmissionsList(Resource):
-    @admins_only
+    @admin_or_author
     @submissions_namespace.doc(
         description="Endpoint to get submission objects in bulk",
         responses={
@@ -114,7 +114,7 @@ class SubmissionsList(Resource):
             "data": response.data,
         }
 
-    @admins_only
+    @admin_or_author
     @submissions_namespace.doc(
         description="Endpoint to create a submission object. Users should interact with the attempt endpoint to submit flags.",
         responses={
@@ -151,7 +151,7 @@ class SubmissionsList(Resource):
 @submissions_namespace.route("/<submission_id>")
 @submissions_namespace.param("submission_id", "A Submission ID")
 class Submission(Resource):
-    @admins_only
+    @admin_or_author
     @submissions_namespace.doc(
         description="Endpoint to get a submission object",
         responses={
@@ -172,7 +172,7 @@ class Submission(Resource):
 
         return {"success": True, "data": response.data}
 
-    @admins_only
+    @admin_or_author
     @submissions_namespace.doc(
         description="Endpoint to edit a submission object",
         responses={
@@ -216,7 +216,7 @@ class Submission(Resource):
 
         return {"success": True, "data": response.data}
 
-    @admins_only
+    @admin_or_author
     @submissions_namespace.doc(
         description="Endpoint to delete a submission object",
         responses={

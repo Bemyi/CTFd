@@ -10,7 +10,7 @@ from CTFd.constants import RawEnum
 from CTFd.models import Flags, db
 from CTFd.plugins.flags import FLAG_CLASSES, get_flag_class
 from CTFd.schemas.flags import FlagSchema
-from CTFd.utils.decorators import admins_only
+from CTFd.utils.decorators import admin_or_author
 from CTFd.utils.helpers.models import build_model_filters
 
 flags_namespace = Namespace("flags", description="Endpoint to retrieve Flags")
@@ -37,7 +37,7 @@ flags_namespace.schema_model(
 
 @flags_namespace.route("")
 class FlagList(Resource):
-    @admins_only
+    @admin_or_author
     @flags_namespace.doc(
         description="Endpoint to list Flag objects in bulk",
         responses={
@@ -77,7 +77,7 @@ class FlagList(Resource):
 
         return {"success": True, "data": response.data}
 
-    @admins_only
+    @admin_or_author
     @flags_namespace.doc(
         description="Endpoint to create a Flag object",
         responses={
@@ -108,7 +108,7 @@ class FlagList(Resource):
 @flags_namespace.route("/types", defaults={"type_name": None})
 @flags_namespace.route("/types/<type_name>")
 class FlagTypes(Resource):
-    @admins_only
+    @admin_or_author
     def get(self, type_name):
         if type_name:
             flag_class = get_flag_class(type_name)
@@ -127,7 +127,7 @@ class FlagTypes(Resource):
 
 @flags_namespace.route("/<flag_id>")
 class Flag(Resource):
-    @admins_only
+    @admin_or_author
     @flags_namespace.doc(
         description="Endpoint to get a specific Flag object",
         responses={
@@ -150,7 +150,7 @@ class Flag(Resource):
 
         return {"success": True, "data": response.data}
 
-    @admins_only
+    @admin_or_author
     @flags_namespace.doc(
         description="Endpoint to delete a specific Flag object",
         responses={200: ("Success", "APISimpleSuccessResponse")},
@@ -164,7 +164,7 @@ class Flag(Resource):
 
         return {"success": True}
 
-    @admins_only
+    @admin_or_author
     @flags_namespace.doc(
         description="Endpoint to edit a specific Flag object",
         responses={

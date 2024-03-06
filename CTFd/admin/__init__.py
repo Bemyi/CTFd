@@ -55,13 +55,13 @@ from CTFd.utils.exports import background_import_ctf
 from CTFd.utils.exports import export_ctf as export_ctf_util
 from CTFd.utils.security.auth import logout_user
 from CTFd.utils.uploads import delete_file
-from CTFd.utils.user import is_admin
+from CTFd.utils.user import is_admin, is_author
 
 
 @admin.route("/admin", methods=["GET"])
 def view():
-    if is_admin():
-        return redirect(url_for("admin.statistics"))
+    if is_admin() or is_author:
+        return redirect(url_for("admin.challenges_listing"))
     return redirect(url_for("auth.login"))
 
 
