@@ -157,7 +157,7 @@ class UserBaseForm(BaseForm):
     website = StringField("Website")
     affiliation = StringField("Affiliation")
     country = SelectField("Country", choices=SELECT_COUNTRIES_LIST)
-    type = SelectField("Type", choices=[("user", "User"), ("admin", "Admin")])
+    type = SelectField("Type", choices=[("user", "User"), ("admin", "Admin"), ("author", "Author")])
     verified = BooleanField("Verified")
     hidden = BooleanField("Hidden")
     banned = BooleanField("Banned")
