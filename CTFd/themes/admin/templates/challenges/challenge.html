@@ -67,10 +67,12 @@
 					<i class="btn-fa fas fa-tasks fa-2x px-2" data-toggle="tooltip" data-placement="top"
 					   title="Correct Submissions"></i>
 				</a>
-				<a class="comments-challenge">
-					<i class="btn-fa fas fa-comments fa-2x px-2" data-toggle="tooltip" data-placement="top"
-					   title="Comments"></i>
-				</a>
+				{% if is_admin() %}
+					<a class="comments-challenge">
+						<i class="btn-fa fas fa-comments fa-2x px-2" data-toggle="tooltip" data-placement="top"
+							title="Comments"></i>
+					</a>
+				{% endif %}
 				<a class="delete-challenge">
 					<i class="btn-fa fas fa-trash-alt fa-2x px-2" data-toggle="tooltip" data-placement="top"
 					   title="Delete Challenge"></i>
