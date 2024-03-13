@@ -102,23 +102,37 @@
 						<td class="text-center" id="{{ sub.id }}">
 							{{ sub.id }}
 						</td>
-						{% if mode == UserModeTypes.TEAMS %}
-						<td>
-							<a href="{{ url_for('admin.users_detail', user_id=sub.user_id) }}">
+						{% if is_admin()%}
+							{% if mode == UserModeTypes.TEAMS %}
+							<td>
+								<a href="{{ url_for('admin.users_detail', user_id=sub.user_id) }}">
+									{{ sub.user.name }}
+								</a>
+							</td>
+							{% endif %}
+							<td class="team" id="{{ sub.account_id }}">
+								<a href="{{ generate_account_url(sub.account_id, admin=True) }}">
+									{{ sub.account.name }}
+								</a>
+							</td>
+							<td class="chal" id="{{ sub.challenge_id }}">
+								<a href="{{ url_for('admin.challenges_detail', challenge_id=sub.challenge_id) }}">
+									{{ sub.challenge.name }}
+								</a>
+							</td>
+						{% else %}
+							{% if mode == UserModeTypes.TEAMS %}
+							<td>
 								{{ sub.user.name }}
-							</a>
-						</td>
-						{% endif %}
-						<td class="team" id="{{ sub.account_id }}">
-							<a href="{{ generate_account_url(sub.account_id, admin=True) }}">
+							</td>
+							{% endif %}
+							<td class="team" id="{{ sub.account_id }}">
 								{{ sub.account.name }}
-							</a>
-						</td>
-						<td class="chal" id="{{ sub.challenge_id }}">
-							<a href="{{ url_for('admin.challenges_detail', challenge_id=sub.challenge_id) }}">
+							</td>
+							<td class="chal" id="{{ sub.challenge_id }}">
 								{{ sub.challenge.name }}
-							</a>
-						</td>
+							</td>
+						{% endif %}
 						<td>
 							{{ sub.type }}
 						</td>
