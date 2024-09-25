@@ -115,8 +115,8 @@
               {% if not user.team_id %}
                 <td class="d-none d-md-table-cell">
                   <a class="no-decoration" href="{{ url_for('teams.join', team_name=team.name) }}">
-                    <span role="button" data-toggle="tooltip" title="Join Team">
-                      <button class="btn btn-primary float-right">Join</button>
+                    <span role="button" data-toggle="tooltip" title="Join">
+                      <button class="btn btn-primary float-right">{% trans %}Join{% endtrans %}</button>
                     </span>
                   </a>
                 </td>
